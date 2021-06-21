@@ -7,11 +7,11 @@ var forecastWeatherTemp = document.getElementById("weather-temp");
 var forecastWeatherWind = document.getElementById("weather-wind");
 var forecastWeatherHumidity = document.getElementById("weather-humidity");
 var forecastWeatherUv = document.getElementById("weather-uv");
-var fiveDayTitle = document.getElementById("forecast-title");
-var fiveDayEmoji = document.getElementById("forecast-emoji-sun");
-var fiveDayTemp = document.getElementById("forecast-temp");
-var fiveDayWind = document.getElementById("forecast-wind");
-var fiveDayHumidity = document.getElementById("forecast-humidity");
+var fiveDayTitle = document.getElementById("forecast-title1");
+var fiveDayEmoji = document.getElementById("forecast-emoji-sun1");
+var fiveDayTemp = document.getElementById("forecast-temp1");
+var fiveDayWind = document.getElementById("forecast-wind1");
+var fiveDayHumidity = document.getElementById("forecast-humidity1");
 
 
 var getSearch = function (event) {
@@ -24,8 +24,8 @@ var getSearch = function (event) {
         cityButton(search);
         searchApi(search);
         fiveDayApi(search);
-        fiveDayDisplayClear();
         forecastDisplayClear();
+        fiveDayDisplayClear();
         searchEl.value = "";
     }
     else {
@@ -120,7 +120,6 @@ var forecastDisplayClear = function () {
 };
 
 var forecastDisplay = function (data) {
-    forecastWeatherTitle.innerHTML = data.name + " (6/20/21)";
     forecastWeatherTemp.innerHTML = "Temp: " + data.main.temp + " &degF";
     forecastWeatherWind.innerHTML = "Wind: " + data.wind.speed + " MPH";
     forecastWeatherHumidity.innerHTML = "Humidity: " + data.main.humidity + " %";
@@ -134,25 +133,27 @@ var forecastUvIndex = function (uv) {
 
 var fiveDayDisplayClear = function () {
     fiveDayTitle.innerHTML = "";
-    fiveDayEmoji.innerHTML = "";
+    // fiveDayEmoji.innerHTML = "";
     fiveDayTemp.innerHTML = "";
     fiveDayWind.innerHTML = "";
     fiveDayHumidity.innerHTML = "";
 };
 
 var fiveDayDisplay = function (data) {
-    for (var i = 0; i < 5; i++) {
-        // get title
-        var title = data.list[0].dt_txt;
-        var titleCut = title.split(" ", 2);
-        console.log(titleCut);
+    // get title split
+    var title = data.list[1].dt_txt;
+    var titleCut = title.split(" ", 2);
 
-        fiveDayTitle.innerHTML = titleCut[0];
-        fiveDayEmoji.innerHTML = "";
-        fiveDayTemp.innerHTML = "";
-        fiveDayWind.innerHTML = "";
-        fiveDayHumidity.innerHTML = "";
-    }
+    // set main date
+    var mainTitle = data.list[0].dt_txt;
+    var mainTitleCut = mainTitle.split(" ", 2);
+    forecastWeatherTitle.innerHTML = data.city.name + " " + mainTitleCut[0];
+
+    fiveDayTitle.innerHTML = titleCut[0];
+    //fiveDayEmoji.innerHTML = "";
+    fiveDayTemp.innerHTML = "Temp: " + data.list[1].main.temp + "&degF";
+    fiveDayWind.innerHTML = "Wind: " + data.list[1].wind.speed + "MPH";
+    fiveDayHumidity.innerHTML = "Humidity: " + data.list[1].main.humidity + "%";
 };
 
 searchByCityEl.addEventListener("submit", getSearch);
