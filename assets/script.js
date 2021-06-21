@@ -7,6 +7,11 @@ var forecastWeatherTemp = document.getElementById("weather-temp");
 var forecastWeatherWind = document.getElementById("weather-wind");
 var forecastWeatherHumidity = document.getElementById("weather-humidity");
 var forecastWeatherUv = document.getElementById("weather-uv");
+var fiveDayTitle = document.getElementById("forecast-title");
+var fiveDayEmoji = document.getElementById("forecast-emoji-sun");
+var fiveDayTemp = document.getElementById("forecast-temp");
+var fiveDayWind = document.getElementById("forecast-wind");
+var fiveDayHumidity = document.getElementById("forecast-humidity");
 
 
 var getSearch = function (event) {
@@ -18,6 +23,8 @@ var getSearch = function (event) {
     if (search) {
         cityButton(search);
         searchApi(search);
+        fiveDayApi(search);
+        fiveDayDisplayClear();
         forecastDisplayClear();
         searchEl.value = "";
     }
@@ -71,6 +78,21 @@ var searchApiUv = function (lat, lon) {
         })
 }
 
+var fiveDayApi = function (search) {
+    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + search + "&units=imperial&appid=915ca21aaa90242f48d5abbe9fa3e4f0";
+
+    fetch(apiUrl)
+        .then(function (response) {
+            if (response.ok) {
+                console.log(response);
+                response.json().then(function (data) {
+                    console.log(data);
+                    fiveDayDisplay(data);
+                })
+            }
+        })
+};
+
 var cityButton = function (keyword) {
     // create city button
     var createBtn = document.createElement("button");
@@ -105,9 +127,32 @@ var forecastDisplay = function (data) {
 
 };
 
-var forecastUvIndex = function(uv) {
+var forecastUvIndex = function (uv) {
     // had to call uv with a different api
     forecastWeatherUv.innerHTML = "UV Index: " + uv;
 }
+
+var fiveDayDisplayClear = function () {
+    fiveDayTitle.innerHTML = "";
+    fiveDayEmoji.innerHTML = "";
+    fiveDayTemp.innerHTML = "";
+    fiveDayWind.innerHTML = "";
+    fiveDayHumidity.innerHTML = "";
+};
+
+var fiveDayDisplay = function (data) {
+    for (var i = 0; i < 5; i++) {
+        // get title
+        var title = data.list[0].dt_txt;
+        var titleCut = title.split(" ", 2);
+        console.log(titleCut);
+
+        fiveDayTitle.innerHTML = titleCut[0];
+        fiveDayEmoji.innerHTML = "";
+        fiveDayTemp.innerHTML = "";
+        fiveDayWind.innerHTML = "";
+        fiveDayHumidity.innerHTML = "";
+    }
+};
 
 searchByCityEl.addEventListener("submit", getSearch);
