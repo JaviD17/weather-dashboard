@@ -19,7 +19,6 @@ var getSearch = function (event) {
         cityButton(search);
         searchApi(search);
         forecastDisplayClear();
-        forecastDisplay(search);
         searchEl.value = "";
     }
     else {
@@ -29,20 +28,46 @@ var getSearch = function (event) {
 };
 
 var searchApi = function (search) {
-    console.log("hello world");
-    var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&appid=915ca21aaa90242f48d5abbe9fa3e4f0"
+    var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + search + "&current&units=imperial&appid=915ca21aaa90242f48d5abbe9fa3e4f0";
+
+    fetch(apiUrl)
+        .then(function (response) {
+            if (response.ok) {
+                console.log(response);
+                response.json().then(function (data) {
+                    console.log(data);
+                    // call current for uv index
+                    var lat = data.coord.lat;
+                    var lon = data.coord.lon;
+                    //searchApiUv(lat, lon);
+                    // call forecastDisplay
+                    forecastDisplay(data);
+                })
+            }
+            else {
+                alert("Error: " + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            alert("Unable to connect to OpenWeather");
+        });
+};
+
+var searchApiUv = function(lat,lon) {
+    https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
+    var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=-" + lon + "&exclude=hourly,daily&appid=915ca21aaa90242f48d5abbe9fa3e4f0";
+
     
-    fetch(apiUrl).then(function(response) {
+    fetch(apiUrl)
+    .then(function(response) {
         if(response.ok) {
             console.log(response);
             response.json().then(function(data) {
                 console.log(data);
-                //
             })
         }
     })
-    // api key 915ca21aaa90242f48d5abbe9fa3e4f0
-};
+}
 
 var cityButton = function (keyword) {
     // create city button
@@ -70,8 +95,12 @@ var forecastDisplayClear = function () {
     forecastWeatherUv.innerHTML = "";
 };
 
-var forecastDisplay = function(keyword) {
-    forecastWeatherTitle.innerHTML = keyword + " (6/20/21)";
-}
+var forecastDisplay = function (data) {
+    forecastWeatherTitle.innerHTML = data.name + " (6/20/21)";
+    forecastWeatherTemp.innerHTML = "Temp: " + data.main.temp + " &degF";
+    forecastWeatherWind.innerHTML = "Wind: " + data.wind.speed + " MPH";
+    forecastWeatherHumidity.innerHTML = "Humidity: " + data.main.humidity + " %";
+    forecastWeatherUv.innerHTML = "UV Index: " ;
+};
 
 searchByCityEl.addEventListener("submit", getSearch);
