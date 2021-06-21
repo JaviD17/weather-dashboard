@@ -36,12 +36,14 @@ var searchApi = function (search) {
                 console.log(response);
                 response.json().then(function (data) {
                     console.log(data);
-                    // call current for uv index
-                    var lat = data.coord.lat;
-                    var lon = data.coord.lon;
-                    //searchApiUv(lat, lon);
-                    // call forecastDisplay
+                    //call forecastDisplay
                     forecastDisplay(data);
+
+                    var latRaw = data.coord.lat;
+                    var lonRaw = data.coord.lon;
+                    var lat = latRaw.toFixed(2);
+                    var lon = lonRaw.toFixed(2);
+                    searchApiUv(lat, lon);
                 })
             }
             else {
@@ -53,20 +55,20 @@ var searchApi = function (search) {
         });
 };
 
-var searchApiUv = function(lat,lon) {
-    https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
-    var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=-" + lon + "&exclude=hourly,daily&appid=915ca21aaa90242f48d5abbe9fa3e4f0";
+var searchApiUv = function (lat, lon) {
+    var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid=915ca21aaa90242f48d5abbe9fa3e4f0";
 
-    
+
     fetch(apiUrl)
-    .then(function(response) {
-        if(response.ok) {
-            console.log(response);
-            response.json().then(function(data) {
-                console.log(data);
-            })
-        }
-    })
+        .then(function (response) {
+            if (response.ok) {
+                console.log(response);
+                response.json().then(function (data) {
+                    console.log(data);
+                    forecastUvIndex(data.current.uvi);
+                })
+            }
+        })
 }
 
 var cityButton = function (keyword) {
@@ -100,7 +102,11 @@ var forecastDisplay = function (data) {
     forecastWeatherTemp.innerHTML = "Temp: " + data.main.temp + " &degF";
     forecastWeatherWind.innerHTML = "Wind: " + data.wind.speed + " MPH";
     forecastWeatherHumidity.innerHTML = "Humidity: " + data.main.humidity + " %";
-    forecastWeatherUv.innerHTML = "UV Index: " ;
+
 };
+
+var forecastUvIndex = function(uv) {
+    forecastWeatherUv.innerHTML = "UV Index: " + uv;
+}
 
 searchByCityEl.addEventListener("submit", getSearch);
