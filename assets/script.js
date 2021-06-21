@@ -28,7 +28,7 @@ var getSearch = function (event) {
 };
 
 var searchApi = function (search) {
-    var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + search + "&current&units=imperial&appid=915ca21aaa90242f48d5abbe9fa3e4f0";
+    var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + search + "&units=imperial&appid=915ca21aaa90242f48d5abbe9fa3e4f0";
 
     fetch(apiUrl)
         .then(function (response) {
@@ -56,7 +56,7 @@ var searchApi = function (search) {
 };
 
 var searchApiUv = function (lat, lon) {
-    var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid=915ca21aaa90242f48d5abbe9fa3e4f0";
+    var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=915ca21aaa90242f48d5abbe9fa3e4f0";
 
 
     fetch(apiUrl)
@@ -106,6 +106,7 @@ var forecastDisplay = function (data) {
 };
 
 var forecastUvIndex = function(uv) {
+    // had to call uv with a different api
     forecastWeatherUv.innerHTML = "UV Index: " + uv;
 }
 
