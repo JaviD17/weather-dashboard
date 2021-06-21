@@ -1,0 +1,36 @@
+.h1-item {
+    text-align: center;
+}
+
+.main-container {
+    text-align: center;
+}
+
+.search-buttons {
+    margin: 5px;
+}
+
+.weather {
+    text-align: left;
+}
+
+.forecast {
+    background-color: navy;
+}
+
+.g-5, .gx-5 {
+    --bs-gutter-x: 1rem;
+}
+
+.bg-light {
+    background-color: navy!important;
+    color: white;
+}
+
+.forecast-title {
+    font-weight: bold;
+}
+
+.forecast-item {
+    text-align: left;
+}
